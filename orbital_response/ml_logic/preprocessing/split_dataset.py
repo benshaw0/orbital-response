@@ -15,18 +15,24 @@ def split_dataset(
     seed=42
     ):
 
-    assert abs(train_pct + val_pct + test_pct - 1.0) < 1e-5, "percentages needs to sum 1.0"
+    assert abs(train_pct + val_pct + test_pct - 1.0) < 1e-5, "percentages need to sum 1.0"
 
     image_dir = Path(image_dir)
     mask_dir = Path(mask_dir)
     output_dir = Path(output_dir)
 
-    image_paths = sorted(image_dir.glob("*_post_disaster.tif"))
-    valid_pairs = [(img, mask_dir / img.name.replace(".tif", "_mask.png")) for img in image_paths if (mask_dir / img.name.replace(".tif", "_mask.png")).exists()]
+    image_paths = sorted(image_dir.glob("*_post_disaster.png"))
+    valid_pairs = []
 
-    print(f"🔍 Amount of valid pairs: {len(valid_pairs)}")
+    for img in image_paths:
+        base_name = img.name.replace(".png", "")
+        mask_path = mask_dir / f"{base_name}_mask.png"
+        if mask_path.exists():
+            valid_pairs.append((img, mask_path))
 
-    # LIMIT THE % OF THE DATASET
+    print(f"Image pairs found: {len(valid_pairs)}")
+
+    # Limit subset
     subset_size = int(len(valid_pairs) * dataset_fraction)
     random.seed(seed)
     selected_pairs = random.sample(valid_pairs, subset_size)
@@ -49,15 +55,4 @@ def split_dataset(
             shutil.copy(img_path, img_out / img_path.name)
             shutil.copy(mask_path, msk_out / mask_path.name)
 
-        print(f"📁 {split}: {len(pairs)} images pairs sent to {img_out.parent}")
-
-if __name__ == "__main__":
-    split_dataset(
-        image_dir="data/filtered/images",
-        mask_dir="data/filtered/masks",
-        output_dir="data/processed_dataset",
-        dataset_fraction=1,   # TOTAL % IN THE SPLIT
-        train_pct=0.7,
-        val_pct=0.15,
-        test_pct=0.15
-    )
+        print(f"📁 {split}: {len(pairs)} image-mask pairs copied to {img_out.parent}")
