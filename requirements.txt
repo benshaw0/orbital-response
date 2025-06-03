@@ -1,0 +1,12 @@
+torch>=2.0.0
+torchvision
+numpy
+pandas
+rasterio
+geopandas
+shapely
+matplotlib
+scikit-learn
+tqdm
+albumentations
+affine
