@@ -6,7 +6,5 @@ rasterio
 geopandas
 shapely
 matplotlib
-scikit-learn
-tqdm
-albumentations
 affine
+PIL
