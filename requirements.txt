@@ -7,4 +7,5 @@ geopandas
 shapely
 matplotlib
 affine
-PIL
+Pillow
+scikit-learn
