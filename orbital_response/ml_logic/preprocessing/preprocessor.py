@@ -51,7 +51,7 @@ def process_and_filter(source_root, filtered_dir):
 
     image_files = [f for f in os.listdir(image_dir) if f.endswith(".tif")]
 
-    for image_file in tqdm(image_files, desc=f"Procesando {source_root}"):
+    for image_file in tqdm(image_files, desc=f"Processing {source_root}"):
         base_name = image_file.replace(".tif", "")
         disaster = base_name.split("_")[0]
 
@@ -59,7 +59,7 @@ def process_and_filter(source_root, filtered_dir):
         label_path = os.path.join(label_dir, base_name + ".json")
 
         if disaster not in SELECTED_DISASTERS:
-            # 🧹 Eliminar archivos no deseados
+            # 🧹 delete unwanted files
             if os.path.exists(image_path):
                 os.remove(image_path)
             if os.path.exists(label_path):
@@ -72,7 +72,7 @@ def process_and_filter(source_root, filtered_dir):
         rgb_path = mask_path.replace("_mask.png", "_mask_rgb.png")
 
         if not os.path.exists(label_path):
-            print(f"⚠️ Falta el label de {image_file}")
+            print(f"⚠️ Missing the label of {image_file}")
             continue
 
         try:
