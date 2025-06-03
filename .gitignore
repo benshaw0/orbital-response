@@ -29,3 +29,7 @@
 
 # Challengify - test challengification files
 #*_challengify*
+.env
+.envrc
+.env.yaml
+.python-version
