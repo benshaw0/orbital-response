@@ -1,27 +1,12 @@
-#.env
+## OS generated files
+.DS_Store
+__MACOSX
 
-# OS generated files #
-######################
-#.DS_Store
-#__MACOSX
 # Jupiter Notebook #
-#.pytest_cache
-#__pycache__
-#*checkpoint.ipynb
-#*.ipynb_checkpoints
-
-# inteliJ #
-#.idea
-#*.gz
-#*PKG-INFO
-#*.egg-info
-#05-ML/**/*.txt
-#06-Deep-Learning/**/*.txt
-#*.zip
-#mlruns
-#*.sqlite
-# IDE #
-#*.vscode
+.pytest_cache
+__pycache__
+*checkpoint.ipynb
+*.ipynb_checkpoints
 
 #secret files
 .env
@@ -34,3 +19,4 @@
 *.geojson
 *.tif
 *.png
+*.jpg
