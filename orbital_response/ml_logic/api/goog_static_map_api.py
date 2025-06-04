@@ -4,7 +4,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-load_dotenv()
+load_dotenv(dotenv_path=".env")
 
 lat, lon = 31.551953, 34.49948
 zoom = 17
@@ -21,7 +21,7 @@ url = (
 r = requests.get(url)
 if r.ok:
     img = Image.open(BytesIO(r.content))
-    img.save("orbital_response/ml_logic/api/images/post_disaster.png")
+    img.save("post_disaster.png")
     print("Saved post image.png")
 else:
     print("Error when downloading post image:", r.status_code)
