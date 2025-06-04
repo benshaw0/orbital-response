@@ -1,4 +1,3 @@
-import os
 import shutil
 import random
 from pathlib import Path
@@ -13,46 +12,46 @@ def split_dataset(
     val_pct=0.15,
     test_pct=0.15,
     seed=42
-    ):
-
-    assert abs(train_pct + val_pct + test_pct - 1.0) < 1e-5, "percentages need to sum 1.0"
+):
+    assert abs(train_pct + val_pct + test_pct - 1.0) < 1e-5, "percentages must sum to 1.0"
 
     image_dir = Path(image_dir)
     mask_dir = Path(mask_dir)
     output_dir = Path(output_dir)
 
-    image_paths = sorted(image_dir.glob("*_post_disaster.png"))
-    valid_pairs = []
+    post_images = sorted(image_dir.glob("*_post_disaster.png"))
+    valid_triplets = []
 
-    for img in image_paths:
-        base_name = img.name.replace(".png", "")
-        mask_path = mask_dir / f"{base_name}_mask.png"
-        if mask_path.exists():
-            valid_pairs.append((img, mask_path))
+    for post_img in post_images:
+        base = post_img.name.replace("_post_disaster.png", "")
+        pre_img = image_dir / f"{base}_pre_disaster.png"
+        mask_path = mask_dir / f"{base}_post_disaster_mask.png"  # Ajusta si tus máscaras tienen otro nombre
 
-    print(f"Image pairs found: {len(valid_pairs)}")
+        if pre_img.exists() and mask_path.exists():
+            valid_triplets.append((pre_img, post_img, mask_path))
 
-    # Limit subset
-    subset_size = int(len(valid_pairs) * dataset_fraction)
+    print(f"Image triplets found: {len(valid_triplets)}")
+
+    subset_size = int(len(valid_triplets) * dataset_fraction)
     random.seed(seed)
-    selected_pairs = random.sample(valid_pairs, subset_size)
-    print(f"✅ Using {subset_size} image pairs ({dataset_fraction*100:.0f}%)")
+    selected_triplets = random.sample(valid_triplets, subset_size)
+    print(f"Using {subset_size} image triplets ({dataset_fraction*100:.0f}%)")
 
-    # Split
-    train_val, test = train_test_split(selected_pairs, test_size=test_pct, random_state=seed)
+    train_val, test = train_test_split(selected_triplets, test_size=test_pct, random_state=seed)
     val_rel_pct = val_pct / (train_pct + val_pct)
     train, val = train_test_split(train_val, test_size=val_rel_pct, random_state=seed)
 
     split_map = {"train": train, "val": val, "test": test}
 
-    for split, pairs in split_map.items():
+    for split, triplets in split_map.items():
         img_out = output_dir / split / "images"
         msk_out = output_dir / split / "masks"
         img_out.mkdir(parents=True, exist_ok=True)
         msk_out.mkdir(parents=True, exist_ok=True)
 
-        for img_path, mask_path in pairs:
-            shutil.copy(img_path, img_out / img_path.name)
+        for pre_path, post_path, mask_path in triplets:
+            shutil.copy(pre_path, img_out / pre_path.name)
+            shutil.copy(post_path, img_out / post_path.name)
             shutil.copy(mask_path, msk_out / mask_path.name)
 
-        print(f"📁 {split}: {len(pairs)} image-mask pairs copied to {img_out.parent}")
+        print(f"{split}: {len(triplets)} triplets copied to {img_out.parent}")
