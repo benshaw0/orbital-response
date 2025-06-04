@@ -41,45 +41,44 @@ def load_shapes_from_json(json_path):
 
 def generate_masks_from_png(png_dir, json_dirs, output_dir):
     os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(os.path.join(output_dir, "rgb_masks"), exist_ok=True)
 
     png_files = [f for f in os.listdir(png_dir) if f.endswith(".png")]
     for file in tqdm(png_files, desc="Generating masks"):
         base = file.replace(".png", "")
         png_path = os.path.join(png_dir, file)
 
-        # Look at corresponding json file
+        # Find the Json to image
         json_path = None
         for jd in json_dirs:
             candidate = os.path.join(jd, base + ".json")
             if os.path.exists(candidate):
                 json_path = candidate
                 break
-        if not json_path:
-            continue
 
         img = Image.open(png_path)
         width, height = img.size
-        shapes = load_shapes_from_json(json_path)
-        if not shapes:
-            continue
 
-        transform = Affine.translation(0, 0) * Affine.scale(1, 1)
+        shapes = load_shapes_from_json(json_path) if json_path else []
 
-        mask = rasterize(
-            ((geom, val) for geom, val in shapes),
-            out_shape=(height, width),
-            transform=transform,
-            fill=0,
-            dtype="uint8"
-        )
+        if shapes:
+            mask = rasterize(
+                ((geom, val) for geom, val in shapes),
+                out_shape=(height, width),
+                transform=Affine.translation(0, 0) * Affine.scale(1, 1),
+                fill=0,
+                dtype="uint8"
+            )
+        else:
+            mask = np.zeros((height, width), dtype=np.uint8)
 
-        # Save mask png
+        # Grey Scale Masks
         mask_path = os.path.join(output_dir, base + "_mask.png")
         Image.fromarray(mask).save(mask_path)
 
-        # Preview mask png file
+        # RGB Checking masks
         rgb = np.zeros((height, width, 3), dtype=np.uint8)
         for class_id, color in COLOR_MAPPING.items():
             rgb[mask == class_id] = color
-        rgb_path = os.path.join(output_dir, base + "_mask_rgb.png")
+        rgb_path = os.path.join(output_dir, "rgb_masks", base + "_mask_rgb.png")
         Image.fromarray(rgb).save(rgb_path)
