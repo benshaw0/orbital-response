@@ -1,5 +1,9 @@
 fastapi
 uvicorn
+streamlit
+pandas 
+numpy
+requests
 
 # wheel
 # nbresult

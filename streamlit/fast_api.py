@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI() #Fast API uses uvicorn
 
 @app.get('/')
 def root():

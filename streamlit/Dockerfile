@@ -5,7 +5,5 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 CMD uvicorn fast_api:app --host 0.0.0.0 --port $PORT
 
-# EXPOSE 8000
-#CMD ["uvicorn", "fast_api:app", "--host", "0.0.0.0", "--port", "8000"]
-
+# CMD ["streamlit", "run", "fast_api.py", "--server.port=8080", "--server.address=0.0.0.0"]
 
