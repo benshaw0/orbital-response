@@ -10,4 +10,4 @@ affine
 Pillow
 scikit-learn
 requests
-dotenv
+python-dotenv
