@@ -12,3 +12,7 @@ scikit-learn
 requests
 python-dotenv
 tqdm
+
+fastapi
+uvicorn
+streamlit
