@@ -1,0 +1,6 @@
+st.title("Orbital Response Dashboard")
+st.header("Damage Estimation")
+st.subheader("Prediction Inputs")
+st.text("This is plain text without formatting.")
+st.markdown("**Bold text**, _italic text_, and [a link](https://streamlit.io)")
+st.caption("Note: All values are in megatons.")
