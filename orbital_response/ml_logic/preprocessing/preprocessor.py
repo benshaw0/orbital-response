@@ -1,6 +1,5 @@
 import shutil
 
-
 from orbital_response.ml_logic.preprocessing.convert_tif_to_png import convert_all_tifs
 from orbital_response.ml_logic.preprocessing.generate_masks_from_png import generate_masks_from_png
 from orbital_response.ml_logic.preprocessing.split_dataset import split_dataset
