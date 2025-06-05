@@ -15,6 +15,7 @@ __pycache__
 .python-version
 
 #dataset files
+data/
 *.json
 *.geojson
 *.tif
