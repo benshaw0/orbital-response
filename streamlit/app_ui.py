@@ -20,6 +20,7 @@ warzone = {
     "Africa": ["-", "Libya", "Sudan"]
 }
 
+# Step 1: Select Region and Country
 region = st.selectbox("Select your region", list(warzone.keys()))
 country = st.selectbox("Select your country", warzone[region])
 
@@ -31,14 +32,14 @@ elif country == "-":
 if region != "-" and country != "-":
     st.success(f"Your Damage Predictor will be based on: ***{country}*** in ***{region}***")
 
-    # Get coordinates from API
+# Get coordinates from API 
     api_url = f"https://restcountries.com/v3.1/name/{country}?fullText=true"
     response = requests.get(api_url)
-
+# Fetching the API Data
     if response.status_code == 200:
         data = response.json()
         center_lat, center_lon = data[0]["latlng"]
-
+# / Load and show Map of selected Country
         # Load country border GeoJSON
         geojson_url = "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
         geojson_data = requests.get(geojson_url).json()
