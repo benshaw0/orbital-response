@@ -21,3 +21,5 @@ data/
 *.tif
 *.png
 *.jpg
+
+orbital_response/models/
