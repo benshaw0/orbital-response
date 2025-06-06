@@ -4,7 +4,9 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-load_dotenv(dotenv_path=".env")
+#load_dotenv(dotenv_path=".env")
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../../../.env"))
+
 
 def google_api(lat, lon):
     zoom = 17
@@ -21,9 +23,10 @@ def google_api(lat, lon):
     r = requests.get(url)
     if r.ok:
         img = Image.open(BytesIO(r.content))
-        img.save("post_disaster.png")
+        os.makedirs("streamlit", exist_ok=True)
+        img.save("streamlit/post_disaster.png")
         print("Saved post image.png")
     else:
         print("Error when downloading post image:", r.status_code)
 
-google_api(31.55195, 34.49948)
+#google_api(31.55195, 34.49948)
