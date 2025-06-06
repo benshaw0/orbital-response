@@ -1,0 +1,33 @@
+Metadata-Version: 2.4
+Name: orbital_response
+Version: 0.0.1
+Summary: Orbital Response Project
+Home-page: https://github.com/benshaw0/orbital-response
+Author: Ben Shaw, Christian Miró, Felix Pless
+Author-email: 
+License: MIT
+Requires-Dist: torch>=2.0.0
+Requires-Dist: torchvision
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: rasterio
+Requires-Dist: geopandas
+Requires-Dist: shapely
+Requires-Dist: matplotlib
+Requires-Dist: affine
+Requires-Dist: Pillow
+Requires-Dist: scikit-learn
+Requires-Dist: requests
+Requires-Dist: python-dotenv
+Requires-Dist: tqdm
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: streamlit
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: requests
+Dynamic: author
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: summary
