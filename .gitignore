@@ -16,6 +16,7 @@ __pycache__
 
 #dataset files
 data/
+data_secondary/
 *.json
 *.geojson
 *.tif
