@@ -24,7 +24,9 @@ from mapbox_api import mapbox_api
 #Importing img_transform and model module
 #from ml_logic.model.model import get_model, get_model_destruction
 #load_dotenv()
-google_api_key = os.getenv("GOOGLE_API_KEY")
+# google_api_key = os.getenv("GOOGLE_API_KEY")
+#google_api_key = 'AIzaSyAz4skeLv37RPY2flqyUbnk6WU384yJvUA'
+google_api_key = os.environ.get("GOOGLE_API_KEY")
 # Dictionary of Warzones
 warzone = {
     "-": ["-"],
