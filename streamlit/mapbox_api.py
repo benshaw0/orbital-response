@@ -12,8 +12,8 @@ from pathlib import Path
 def mapbox_api(lat, lon):
     zoom = 17
     size = (1024, 1024)
-    mapbox_token = "pk.eyJ1IjoiY2hyaXN0aWFubWlyc2UiLCJhIjoiY21iaHo4b3dmMDA3YjJrcW5obTBwMDJjOCJ9.TUODbtq5ae1xvG1Q_h7rHQ"
-
+    #mapbox_token = "pk.eyJ1IjoiY2hyaXN0aWFubWlyc2UiLCJhIjoiY21iaHo4b3dmMDA3YjJrcW5obTBwMDJjOCJ9.TUODbtq5ae1xvG1Q_h7rHQ"
+    mapbox_token = os.environ.get("MAPBOX_API_KEY")
     url = (
         f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/{lon},{lat},{zoom}/{size[0]}x{size[1]}?access_token={mapbox_token}"
     )
