@@ -24,19 +24,12 @@ def google_api(lat, lon):
     if r.ok:
         img = Image.open(BytesIO(r.content))
         #os.makedirs("streamlit", exist_ok=True)
-        save_path = (
-            Path(__file__)
-            .resolve()
-            .parents[2]
-            / "images_masks" / "satellite_images" / "post_disaster.png"
-            )
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-        print(save_path)
+        save_path = os.path.join(os.path.dirname(__file__), 'images_masks', 'satellite_images', "post_disaster.png")
+        #save_path.parent.mkdir(parents=True, exist_ok=True)
         img.save(save_path)
-        print("Saved post image.png")
+        print("Saved post image .png")
     else:
-        print("Error when downloading post image:", r.status_code)
-
+        print("Error when downloading pre image:", r.status_code)
 
 if __name__ == '__main__':
-    google_api(30, 21)
+    google_api(30.03, 31.36)

@@ -29,10 +29,5 @@ uvicorn
 gensim
 
 streamlit
-streamlit_image_comparison
-streamlit_folium
-folium
-albumentations
-ultralytics
 
-ipywidgets
+torchsummary

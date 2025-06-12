@@ -15,14 +15,25 @@ def get_resnet34_encoder():
     resnet34.conv1 = nn.Conv2d(in_channels=6, out_channels=64, kernel_size=7, stride=2, padding=3, bias=False
 )
     return resnet34
+
 def get_resnet34_destruction_encoder():
-    resnet34 = models.resnet34(pretrained=True)
-    resnet34.conv1 = nn.Conv2d(in_channels=7, out_channels=64, kernel_size=7, stride=2, padding=3, bias=False
+    resnet34_destruction = models.resnet34(pretrained=True)
+    resnet34_destruction.conv1 = nn.Conv2d(in_channels=7, out_channels=64, kernel_size=7, stride=2, padding=3, bias=False
 )
-    return resnet34
+    return resnet34_destruction
 
 # Decoder conv block
 def conv_block(in_channels, out_channels):
+    return nn.Sequential(
+        nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+        nn.ReLU(inplace=True),
+        nn.BatchNorm2d(out_channels),
+        nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
+        nn.ReLU(inplace=True),
+        nn.BatchNorm2d(out_channels)
+    )
+
+def conv_Destruction_block(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
         nn.ReLU(inplace=True),
@@ -54,7 +65,7 @@ class UNetModel(nn.Module):
         self.up1 = nn.ConvTranspose2d(64, 64, kernel_size=2, stride=2)
         self.final_conv = nn.Conv2d(64, n_classes, kernel_size=1)
 
-        self.dropout = nn.Dropout2d(0.2)
+        self.dropout = nn.Dropout2d(0.6)
 
     def forward(self, x):
         # Encoder
@@ -81,16 +92,16 @@ class UNetModelDestruction(nn.Module):
 
         self.encoder = get_resnet34_destruction_encoder()
         self.up5 = nn.ConvTranspose2d(512, 256, kernel_size=2, stride=2)
-        self.dec5 = conv_block(256 + 256, 256)
+        self.dec5 = conv_Destruction_block(256 + 256, 256)
 
         self.up4 = nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2)
-        self.dec4 = conv_block(128 + 128, 128)
+        self.dec4 = conv_Destruction_block(128 + 128, 128)
 
         self.up3 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
-        self.dec3 = conv_block(64 + 64, 64)
+        self.dec3 = conv_Destruction_block(64 + 64, 64)
 
         self.up2 = nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2)
-        self.dec2 = conv_block(32 + 64, 64)
+        self.dec2 = conv_Destruction_block(32 + 64, 64)
 
         self.up1 = nn.ConvTranspose2d(64, 64, kernel_size=2, stride=2)
         self.final_conv = nn.Conv2d(64, n_classes, kernel_size=1)
