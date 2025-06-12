@@ -24,7 +24,7 @@ from mapbox_api import mapbox_api
 #Importing img_transform and model module
 #from ml_logic.model.model import get_model, get_model_destruction
 #load_dotenv()
-GOOGLE_API_KEY = "AIzaSyAz4skeLv37RPY2flqyUbnk6WU384yJvUA"
+google_api_key = os.getenv("GOOGLE_API_KEY")
 # Dictionary of Warzones
 warzone = {
     "-": ["-"],
@@ -68,7 +68,7 @@ search_query = st.sidebar.text_input("Search Location")
 search_coords = None
 if search_query:
     try:
-        params = {"address": search_query, "key": GOOGLE_API_KEY}
+        params = {"address": search_query, "key": google_api_key}
         response = requests.get("https://maps.googleapis.com/maps/api/geocode/json", params=params)
         data = response.json()
         if data["status"] == "OK":
@@ -190,7 +190,7 @@ if st.button('show me'):
         model = get_model()
         model_destruction = get_model_destruction()
         model.load_state_dict(torch.load("models/Gaza_2nd_BestModel_70.pth", map_location=torch.device("cpu")))
-        model_destruction.load_state_dict(torch.load("models/GazaData_v2_Destruction_Model_77.pth", map_location=torch.device("cpu")))
+        model_destruction.load_state_dict(torch.load("models/GazaData_v2_Destruction_Model_71.pth", map_location=torch.device("cpu")))
         return model.to(device), model_destruction.to(device)
 
     model, model_destruction = load_models()
@@ -210,7 +210,7 @@ if st.button('show me'):
     with torch.no_grad():
         model.eval()
         pred = torch.sigmoid(model(input_tensor))
-        bin_mask = (pred > 0.65).float().squeeze(0).squeeze(0)  # [H, W]
+        bin_mask = (pred > 0.6).float().squeeze(0).squeeze(0)  # [H, W]
         mask_img = to_pil_image(bin_mask.cpu())
         os.makedirs("images_masks/masks", exist_ok=True)
         mask_img.save("images_masks/masks/building_mask.png")
@@ -219,7 +219,7 @@ if st.button('show me'):
     ##_______________MODEL 2 - DESTRUCTION DETECTION _____________##
     building_img = resize(Image.open(building_mask_path))
     building_tensor = T.ToTensor()(building_img)
-    building_tensor = (building_tensor < 0.65).float()
+    building_tensor = (building_tensor < 0.5).float()
 
     input_tensor = torch.cat([pre_tensor, post_tensor, building_tensor], dim=0)
     normalize_destruction = T.Normalize(
