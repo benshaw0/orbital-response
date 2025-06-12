@@ -12,13 +12,14 @@ from pathlib import Path
 def mapbox_api(lat, lon):
     zoom = 17
     size = (1024, 1024)
-    mapbox_token = os.getenv("MAPBOX_API_KEY")
+    mapbox_token = "pk.eyJ1IjoiY2hyaXN0aWFubWlyc2UiLCJhIjoiY21iaHo4b3dmMDA3YjJrcW5obTBwMDJjOCJ9.TUODbtq5ae1xvG1Q_h7rHQ"
 
     url = (
         f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/{lon},{lat},{zoom}/{size[0]}x{size[1]}?access_token={mapbox_token}"
     )
 
     print(os.path.dirname(__file__))
+    save_path = os.path.join(os.path.dirname(__file__), 'images_masks', 'satellite_images', "pre_disaster.png")
 
     r = requests.get(url)
     if r.ok:
@@ -31,14 +32,13 @@ def mapbox_api(lat, lon):
         #     .parents[2]
         #     / "images_masks" / "satellite_images" / "pre_disaster.png"
         #     )
-        save_path = os.path.join(os.path.dirname(__file__), 'images_masks', 'satellite_images', "pre_disaster.png")
         #save_path.parent.mkdir(parents=True, exist_ok=True)
         img.save(save_path)
         print("Saved pre image .png")
     else:
         print("Error when downloading pre image:", r.status_code)
 
-    return 'done'
+    return save_path
 
 if __name__ == '__main__':
-    mapbox_api(31, 31)
+    mapbox_api(31, 33)
