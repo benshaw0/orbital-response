@@ -44,46 +44,47 @@ slides = [
     {
         "title": "Primary Data Source",
         "content": """
-        **xBD Dataset**
+            ### **xBD Dataset**
 
-        *The largest, manually labelled, building damage assessment dataset*
+            *The largest, manually labelled, building damage assessment dataset*
 
-         **18,336** high-resolution satellite images
-         **850,000** polygons covering over **45,000 km²**
-
-        Covers **six types** of natural disasters worldwide:
-        - **Earthquakes**
-        - **Hurricanes**
-        - **Monsoons**
-        - <span style='color:grey;'>Wildfires</span>
-        - <span style='color:grey;'>Volcanic Eruptions</span>
-        - <span style='color:grey;'>Floods</span>
-
-        ---
-
-        **Damage Classification:**
-        - **0** — un-classified
-        - **1** — no-damage
-        - **2** — minor-damage
-        - **3** — major-damage
-        - **4** — destroyed
+            **18,336** high-resolution satellite images
+            **850,000** polygons covering over **45,000 km²**
+        """,
+        "disaster_types": """
+            - Earthquakes
+            - Hurricanes
+            - Monsoons
+            - <span style='color:gray;'> Wildfires</span>
+            - <span style='color:gray;'> Volcanic Eruptions</span>
+            - <span style='color:gray;'>     Floods</span>
+        """,
+        "damage_classes": """
+            - **0** — Unclassified
+            - **1** — No Damage
+            - **2** — Minor Damage
+            - **3** — Major Damage
+            - **4** — Destroyed
         """,
         "image_paths": [
             "presentation_images/primary_data_pre.png",
             "presentation_images/primary_data_post.png"
-        ]
+        ],
+        "additional_image": "presentation_images/primary_data_map.png"
     },
     {
         "title": "Secondary Data Source",
         "content": """
+        ### Gaza - Manually Labelled
+
         Intended to calibrate the models with a manually labelled dataset from Gaza.
 
-        Six locations deliberately selected (shown below), targeting urban areas with high levels of building destruction.
+        **Six locations** deliberately selected (shown below), targeting urban areas with high levels of building destruction.
 
-        150 images labelled with **Roboflow**:
+        **150** images labelled (binary) with **Roboflow**:
 
-        - undamaged - 0
-        - damaged - 1
+        - **Undamaged** {0}
+        - **Damaged** {1}
         """,
         "image_static": "presentation_images/secondary_image_static.png",
         "image_slider_before": "presentation_images/secondary_image_unlabelled.png",
@@ -94,23 +95,24 @@ slides = [
         "content": """
         **Semantic Segmentation** with a **U-Net CNN**
 
-        - **Pretrained Encoder** *(ResNet18)* — Feature compression
+        - **Pretrained Encoder** *(ResNet34)* — Feature compression
         - **Trained Decoder** — Segmentation map
 
-        Total Number of Parameters: **25,383,347**
+        Total Number of Parameters: **~65 million**
 
-        ---
+
 
         **Baseline approach:** Building localisation and damage classification in a single U-Net model
 
         **Final approach:** Separate localisation and damage classification models
         """,
         "image_path": "presentation_images/unet_model_architecture.png"
+
     },
     {
-        "title": "The Models - YOLOv8-seg",
+        "title": "The Models - YOLOv11-seg",
         "content": """
-        **YOLOv8** family by **Ultralytics**, tailored for **instance segmentation**
+        **YOLOv11** family by **Ultralytics**, tailored for **instance segmentation**
 
         - **Pretrained** on the COCO dataset (80+ object classes)
         - **Fine-Tuned** to Gaza with the manually labelled secondary dataset
@@ -134,7 +136,7 @@ st.title(current_slide['title'])
 
 # Display layout depending on slide content
 if current_slide['title'] == "The Initiative" and "image_path" in current_slide:
-    left_col, right_col = st.columns([2, 1])
+    left_col, right_col = st.columns([1.9, 1.1])
     with left_col:
         st.markdown(current_slide["content"], unsafe_allow_html=True)
     with right_col:
@@ -157,16 +159,65 @@ if current_slide['title'] == "The Initiative" and "image_path" in current_slide:
             st.markdown("</div>", unsafe_allow_html=True)
         except FileNotFoundError:
             st.warning(f"Image not found: {current_slide['image_path']}")
+
 elif current_slide['title'] == "Primary Data Source" and "image_paths" in current_slide:
-    left_col, right_col = st.columns([2, 1])
+    left_col, right_col = st.columns([2, 1.1])
+
+    with left_col:
+        # Intro paragraph
+        st.markdown(current_slide["content"], unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Side-by-side lists
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown("**Disaster Types Covered:**")
+            st.markdown(current_slide["disaster_types"], unsafe_allow_html=True)
+        with col2:
+            st.markdown("**Damage Classification:**")
+            st.markdown(current_slide["damage_classes"], unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Additional map image
+        try:
+            st.image(current_slide["additional_image"], caption="xBD Coverage Map", use_container_width=True)
+        except FileNotFoundError:
+            st.warning("Coverage map image not found: primary_data_map.png")
+
+    with right_col:
+        try:
+            st.image(current_slide["image_paths"][0], caption="Pre-Disaster", use_container_width=True)
+            st.image(current_slide["image_paths"][1], caption="Post-Disaster", use_container_width=True)
+        except FileNotFoundError:
+            st.warning("One or both xBD dataset images not found.")
+
+elif current_slide['title'] == "The Models - U-Net":
+    # Create three columns: left (text + unet), divider, right (masks)
+    left_col, divider_col, right_col = st.columns([1.4, 0.1, 0.55])
+
     with left_col:
         st.markdown(current_slide["content"], unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        try:
+            st.image("presentation_images/unet_model_architecture.png", caption="U-Net Architecture", use_container_width=True)
+        except FileNotFoundError:
+            st.warning("Architecture image not found: unet_model_architecture.png")
+
+    with divider_col:
+        st.markdown(
+            "<div style='height:100%; border-left:1px solid #ccc;'></div>",
+            unsafe_allow_html=True
+        )
+
     with right_col:
-        for img_path in current_slide["image_paths"]:
-            try:
-                st.image(img_path, use_container_width=True)
-            except FileNotFoundError:
-                st.warning(f"Image not found: {img_path}")
+        try:
+            st.image("presentation_images/building_mask.png", caption="Building Localisation Mask", use_container_width=True)
+            st.image("presentation_images/building_damage.png", caption="Damage Classification Mask", use_container_width=True)
+        except FileNotFoundError:
+            st.warning("One or both additional images not found.")
+
+
 elif current_slide['title'] == "Secondary Data Source":
     st.markdown("""
         <style>
@@ -189,7 +240,7 @@ elif current_slide['title'] == "Secondary Data Source":
     """, unsafe_allow_html=True)
     st.markdown(current_slide["content"], unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1,1])
     with col1:
         try:
             st.image(current_slide["image_static"], use_container_width=True)
@@ -205,6 +256,7 @@ elif current_slide['title'] == "Secondary Data Source":
             )
         except FileNotFoundError:
             st.warning("Comparison images not found.")
+
 elif "image_path" in current_slide:
     left_col, right_col = st.columns([1.5, 1.5])
     with left_col:
@@ -221,5 +273,7 @@ elif "image_path" in current_slide:
             st.image(current_slide["image_path"], use_container_width=True)
         except FileNotFoundError:
             st.warning(f"Image not found: {current_slide['image_path']}")
+
+
 else:
     st.markdown(current_slide["content"], unsafe_allow_html=True)
