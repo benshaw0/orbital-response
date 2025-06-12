@@ -314,7 +314,7 @@ if st.button('show me'):
 
     #YOLO Model
 
-    model = YOLO("models/yolo_50ep.pt")
+    model = YOLO("models/yolo_150ep_secondary.pt")
     results = model.predict(source=post_image_path, save=False)
 
     results[0].save(filename="temp_yolo_output.jpg")
