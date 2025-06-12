@@ -16,7 +16,6 @@ __pycache__
 
 #dataset files
 data/
-streamlit/models/
 *.json
 *.geojson
 *.tif
