@@ -1,17 +1,18 @@
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
 import requests
 from PIL import Image
 from io import BytesIO
+from pathlib import Path
 
 #load_dotenv(dotenv_path=".env")
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../../../.env"))
+#load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../../../.env"))
 
 
 def google_api(lat, lon):
     zoom = 17
-    size="512x512"
-    scale=2
+    size= "512x512"
+    scale= 2
     api_key = os.getenv("GOOGLE_API_KEY")
 
     url = (
@@ -19,14 +20,23 @@ def google_api(lat, lon):
         f"center={lat},{lon}&zoom={zoom}&size={size}&scale={scale}&maptype=satellite&key={api_key}"
     )
 
-
     r = requests.get(url)
     if r.ok:
         img = Image.open(BytesIO(r.content))
-        os.makedirs("streamlit", exist_ok=True)
-        img.save("streamlit/post_disaster.png")
+        #os.makedirs("streamlit", exist_ok=True)
+        save_path = (
+            Path(__file__)
+            .resolve()
+            .parents[2]
+            / "images_masks" / "satellite_images" / "post_disaster.png"
+            )
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        print(save_path)
+        img.save(save_path)
         print("Saved post image.png")
     else:
         print("Error when downloading post image:", r.status_code)
 
-#google_api(31.55195, 34.49948)
+
+if __name__ == '__main__':
+    google_api(30, 21)

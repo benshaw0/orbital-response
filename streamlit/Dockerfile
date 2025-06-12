@@ -1,9 +1,20 @@
 FROM python:3.10.6-buster
+
 COPY requirements.txt /requirements.txt
-COPY fast_api.py /fast_api.py
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-CMD uvicorn fast_api:app --host 0.0.0.0 --port $PORT
 
-# CMD ["streamlit", "run", "fast_api.py", "--server.port=8080", "--server.address=0.0.0.0"]
+RUN pip install --no-cache-dir -r requirements.txt
 
+COPY models models
+COPY images_masks images_masks/
+COPY ml_logic ml_logic
+COPY app_ui_ben.py app_ui_ben.py
+
+RUN apt-get update && apt-get install -y \
+    g++ \
+    gcc \
+    libgdal-dev \
+    gdal-bin \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD streamlit run app_ui_ben.py --port $PORT
