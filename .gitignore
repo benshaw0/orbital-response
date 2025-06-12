@@ -16,7 +16,7 @@ __pycache__
 
 #dataset files
 data/
-data_secondary/
+streamlit/models/
 *.json
 *.geojson
 *.tif
