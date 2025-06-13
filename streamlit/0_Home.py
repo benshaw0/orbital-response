@@ -11,15 +11,80 @@ st.set_page_config(
     layout="wide"
 )
 
-# Header
-st.markdown("<h1 style='text-align: center'>Orbital Response</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align: center'>Optimising Humanitarian Aid Distribution with AI</h3>", unsafe_allow_html=True)
+banner_path = Path("presentation_images/gaza_banner.png")  # update if in a different folder
 
-st.write("")
+if banner_path.exists():
+    with open(banner_path, "rb") as img_file:
+        b64_encoded = base64.b64encode(img_file.read()).decode()
+    banner_url = f"data:image/jpeg;base64,{b64_encoded}"
+else:
+    st.warning("🚫 Gaza banner image not found.")
+    banner_url = ""
+
+st.markdown(f"""
+    <style>
+    .full-width-banner {{
+        position: relative;
+        width: 100vw;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        background-image: url('{banner_url}');
+        background-size: cover;
+        background-position: center;
+        height: 360px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+    }}
+
+    .full-width-banner::before {{
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.4);
+        z-index: 0;
+    }}
+
+    .banner-text {{
+        z-index: 1;
+        padding: 0 2rem;
+        max-width: 900px;
+    }}
+
+    .banner-text h1 {{
+        font-size: 4.2rem;
+        margin-bottom: 0.3rem;
+    }}
+
+    .banner-text h3 {{
+        font-size: 1.4rem;
+        font-weight: normal;
+        margin-top: 0;
+    }}
+    </style>
+
+    <div class="full-width-banner">
+        <div class="banner-text">
+            <h1>Orbital Response</h1>
+            <h3>Optimising Humanitarian Aid Distribution with AI</h3>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+
+
+
+
+
 st.markdown("---")
 
 st.markdown("""<p style='text-align: center'>
-Our Mission: Harness the power of CNNs and high-frequency satellite imagery to revolutionize humanitarian aid.""", unsafe_allow_html=True)
+**Our Mission: Harness the power of CNNs and high-frequency satellite imagery to revolutionize humanitarian aid.""", unsafe_allow_html=True)
 st.markdown("""<p style='text-align: center'>
 High-quality, high-frequency satellite imagery is a novel resource. </p>""", unsafe_allow_html=True)
 
@@ -27,7 +92,7 @@ st.markdown("<p style='text-align: center'>INSERT TEXT HERE</p>", unsafe_allow_h
 st.write("")
 
 st.markdown("---")
-st.markdown("<h3 style='text-align:center; color:#004080;'>The Team</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align:center; color:#004080;'>Meet The Team</h3>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
 team_profiles = [
